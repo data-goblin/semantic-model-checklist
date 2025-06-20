@@ -131,6 +131,8 @@
             updateTimelineProgress();
         }
 
+        // Replace the updateTimelineProgress function in your template.html with this:
+
         function updateTimelineProgress() {
             const dots = document.querySelectorAll('.timeline-dot');
             const completedDots = document.querySelectorAll('.timeline-dot.completed');
@@ -139,28 +141,36 @@
             const percentage = Math.round((completed / total) * 100);
 
             const progressBar = document.getElementById('timeline-progress');
-            progressBar.style.height = `${(completed / total) * 100}%`;
+
+            if (completed === 0) {
+                // No dots completed - no progress line
+                progressBar.style.height = '0%';
+            } else {
+                // Find the position of the lowest (last) completed dot
+                let lowestCompletedIndex = -1;
+                dots.forEach((dot, index) => {
+                    if (dot.classList.contains('completed')) {
+                        lowestCompletedIndex = Math.max(lowestCompletedIndex, index);
+                    }
+                });
+
+                if (lowestCompletedIndex >= 0) {
+                    // Calculate height to reach the lowest completed dot
+                    // Each timeline item takes up 1/total of the space, plus we want to reach the center of the dot
+                    const heightPercentage = ((lowestCompletedIndex + 1) / total) * 100;
+                    progressBar.style.height = `${heightPercentage}%`;
+                }
+            }
 
             const progressText = document.getElementById('timeline-progress-text');
             progressText.textContent = `${completed} of ${total} steps completed (${percentage}%)`;
 
             if (completed === total) {
-                progressText.textContent += ' Congratulations!';
+                progressText.textContent += ' 🎉 Congratulations!';
                 progressText.style.color = '#00A99D';
             } else {
                 progressText.style.color = '#004c47';
             }
-        }
-
-        function undoAutoCheck(itemId) {
-            const checkbox = document.getElementById('checkbox-' + itemId);
-            if (checkbox) checkbox.checked = false;
-
-            const container = document.getElementById('item-container-' + itemId);
-            if (container) container.classList.remove('auto-checked');
-
-            const autoCheckReason = container.querySelector('.auto-check-reason');
-            if (autoCheckReason) autoCheckReason.style.display = 'none';
         }
 
         document.addEventListener('DOMContentLoaded', updateTimelineProgress);
