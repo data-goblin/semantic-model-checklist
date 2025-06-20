@@ -140,6 +140,7 @@
 
             const progressBar = document.getElementById('timeline-progress');
             const timelineContainer = document.querySelector('.timeline-container');
+            const timelineLineStart = document.querySelector('.timeline-line');
 
             if (completed === 0) {
                 progressBar.style.height = '0%';
@@ -157,17 +158,21 @@
                     }
                 });
 
-                if (lowestCompletedDot && timelineContainer) {
-                    // Get the actual position of the dot relative to the container
-                    const containerRect = timelineContainer.getBoundingClientRect();
+                if (lowestCompletedDot && timelineContainer && timelineLineStart) {
+                    // Get the position of the timeline line start and the dot
+                    const lineRect = timelineLineStart.getBoundingClientRect();
                     const dotRect = lowestCompletedDot.getBoundingClientRect();
 
-                    // Calculate the position from the top of the timeline container to the center of the dot
-                    const dotCenterFromTop = (dotRect.top + dotRect.height / 2) - containerRect.top;
-                    const containerHeight = containerRect.height - 80; // Subtract padding
+                    // Calculate distance from line start to dot center
+                    const lineStartY = lineRect.top;
+                    const dotCenterY = dotRect.top + (dotRect.height / 2);
+                    const distanceFromStart = dotCenterY - lineStartY;
 
-                    // Convert to percentage
-                    const heightPercentage = Math.min((dotCenterFromTop / containerHeight) * 100, 100);
+                    // Get the total line height
+                    const totalLineHeight = lineRect.height;
+
+                    // Calculate percentage but cap it so it doesn't go past the dot
+                    const heightPercentage = Math.max(0, Math.min((distanceFromStart / totalLineHeight) * 100, 100));
                     progressBar.style.height = `${heightPercentage}%`;
                 }
             }
