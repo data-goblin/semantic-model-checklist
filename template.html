@@ -131,8 +131,6 @@
             updateTimelineProgress();
         }
 
-        // Replace the updateTimelineProgress function in your template.html with this:
-
         function updateTimelineProgress() {
             const dots = document.querySelectorAll('.timeline-dot');
             const completedDots = document.querySelectorAll('.timeline-dot.completed');
@@ -155,9 +153,9 @@
                 });
 
                 if (lowestCompletedIndex >= 0) {
-                    // Calculate height to reach the lowest completed dot
-                    // Each timeline item takes up 1/total of the space, plus we want to reach the center of the dot
-                    const heightPercentage = ((lowestCompletedIndex + 1) / total) * 100;
+                    // Calculate height to reach the CENTER of the lowest completed dot
+                    // Don't go past the dot - stop at its center
+                    const heightPercentage = ((lowestCompletedIndex + 0.5) / total) * 100;
                     progressBar.style.height = `${heightPercentage}%`;
                 }
             }
