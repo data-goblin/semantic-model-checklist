@@ -20,6 +20,100 @@
 
         {{INSTRUCTIONS_SECTION}}
 
+        <div class='timeline-section'>
+            <h3>Semantic Model Development Journey</h3>
+
+            <div class='timeline-container'>
+                <div class='timeline-line'></div>
+                <div class='timeline-progress' id='timeline-progress'></div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Gather Requirements & Plan Design</h4>
+                        <p>Define user audience, collect business questions, and plan your model structure</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Explore & Prepare Data</h4>
+                        <p>Profile data sources, assess quality, and design transformation strategy</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Connect & Transform Data</h4>
+                        <p>Build Power Query connections, apply transformations, and optimize refresh</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Create & Validate Relationships</h4>
+                        <p>Establish table relationships, check referential integrity, and validate model</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Author & Validate DAX</h4>
+                        <p>Create measures, calculated columns, and test business logic accuracy</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Organize Columns & Measures</h4>
+                        <p>Structure display folders, hide technical fields, and add descriptions</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Test the Model</h4>
+                        <p>Validate calculations, test edge cases, and benchmark performance</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Document the Model</h4>
+                        <p>Create field dictionary, document business rules, and prepare handover materials</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Deploy the Model</h4>
+                        <p>Publish to production, configure refresh schedules, and set up monitoring</p>
+                    </div>
+                </div>
+
+                <div class='timeline-item'>
+                    <div class='timeline-dot' onclick='toggleTimelineStep(this)'></div>
+                    <div class='timeline-content'>
+                        <h4>Train Users, Support Model & Drive Adoption</h4>
+                        <p>Deliver training, establish support processes, and measure adoption success</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class='timeline-stats'>
+                <div class='progress-text' id='timeline-progress-text'>0 of 10 steps completed (0%)</div>
+                <p style='margin: 5px 0 0 0; color: #666; font-size: 14px;'>Click the dots to mark steps as complete</p>
+            </div>
+        </div>
+
         {{CHECKLIST_SECTIONS}}
 
         <div class='footer'>
@@ -30,6 +124,34 @@
     </div>
 
     <script>
+        function toggleTimelineStep(dot) {
+            dot.classList.toggle('completed');
+            const content = dot.nextElementSibling || dot.previousElementSibling;
+            content.classList.toggle('completed');
+            updateTimelineProgress();
+        }
+
+        function updateTimelineProgress() {
+            const dots = document.querySelectorAll('.timeline-dot');
+            const completedDots = document.querySelectorAll('.timeline-dot.completed');
+            const total = dots.length;
+            const completed = completedDots.length;
+            const percentage = Math.round((completed / total) * 100);
+
+            const progressBar = document.getElementById('timeline-progress');
+            progressBar.style.height = `${(completed / total) * 100}%`;
+
+            const progressText = document.getElementById('timeline-progress-text');
+            progressText.textContent = `${completed} of ${total} steps completed (${percentage}%)`;
+
+            if (completed === total) {
+                progressText.textContent += ' Congratulations!';
+                progressText.style.color = '#00A99D';
+            } else {
+                progressText.style.color = '#004c47';
+            }
+        }
+
         function undoAutoCheck(itemId) {
             const checkbox = document.getElementById('checkbox-' + itemId);
             if (checkbox) checkbox.checked = false;
@@ -40,6 +162,8 @@
             const autoCheckReason = container.querySelector('.auto-check-reason');
             if (autoCheckReason) autoCheckReason.style.display = 'none';
         }
+
+        document.addEventListener('DOMContentLoaded', updateTimelineProgress);
     </script>
 </body>
 
