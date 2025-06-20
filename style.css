@@ -275,45 +275,85 @@ body {
     color: var(--te3-dark);
 }
 
-/* Timeline Styles */
+/* Timeline Styles - Critical Section */
 .timeline-section {
-    background: white;
+    background: var(--te3-light-3)11;
     padding: 30px;
     border-radius: 8px;
     margin: 30px 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.timeline-section h3 {
+    text-align: center;
+    color: var(--te3-dark);
+    margin-bottom: 30px;
+    font-size: 24px;
 }
 
 .timeline-container {
     position: relative;
     padding: 40px 20px;
-    max-width: 1000px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
+/* Central timeline line */
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    bottom: 40px;
+    width: 3px;
+    background: #ddd;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+/* Progress line that fills as items complete */
+.timeline-progress {
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    width: 3px;
+    background: var(--te3-accent);
+    transform: translateX(-50%);
+    z-index: 2;
+    transition: height 0.5s ease;
+    height: 0%;
+}
+
+/* Individual timeline items */
 .timeline-item {
     display: flex;
     align-items: center;
-    margin: 20px 0;
+    margin: 30px 0;
     position: relative;
     min-height: 80px;
 }
 
-.timeline-item:nth-child(even) {
-    flex-direction: row-reverse;
+/* Zigzag pattern - every other item goes to the right */
+.timeline-item:nth-child(odd) {
+    justify-content: flex-start;
 }
 
+.timeline-item:nth-child(even) {
+    justify-content: flex-end;
+}
+
+/* The clickable dot */
 .timeline-dot {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background: #ddd;
     border: 3px solid #ddd;
-    z-index: 2;
-    position: relative;
+    z-index: 3;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     cursor: pointer;
     transition: all 0.3s ease;
-    flex-shrink: 0;
 }
 
 .timeline-dot.completed {
@@ -339,26 +379,43 @@ body {
     opacity: 1;
 }
 
+/* Content boxes that appear left and right */
 .timeline-content {
-    background: #f8f9fa;
-    padding: 15px 20px;
+    background: white;
+    padding: 20px;
     border-radius: 8px;
-    margin: 0 20px;
-    border-left: 4px solid #ddd;
+    border: 1px solid #ddd;
     transition: all 0.3s ease;
-    flex-grow: 1;
-    max-width: 300px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 300px;
+    position: relative;
+}
+
+/* Left side content */
+.timeline-item:nth-child(odd) .timeline-content {
+    margin-right: auto;
+    margin-left: 0;
+    transform: translateX(-50px);
+}
+
+/* Right side content */
+.timeline-item:nth-child(even) .timeline-content {
+    margin-left: auto;
+    margin-right: 0;
+    transform: translateX(50px);
 }
 
 .timeline-content.completed {
-    border-left-color: var(--te3-accent);
-    background: var(--te3-accent)11;
+    border-color: var(--te3-accent);
+    background: var(--te3-accent)08;
 }
 
 .timeline-content h4 {
     margin: 0 0 8px 0;
     color: var(--te3-dark);
     font-size: 16px;
+    font-weight: bold;
 }
 
 .timeline-content p {
@@ -368,35 +425,13 @@ body {
     line-height: 1.4;
 }
 
-.timeline-line {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: #ddd;
-    transform: translateX(-50%);
-    z-index: 1;
-}
-
-.timeline-progress {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 3px;
-    background: var(--te3-accent);
-    transform: translateX(-50%);
-    z-index: 1;
-    transition: height 0.5s ease;
-    height: 0%;
-}
-
 .timeline-stats {
     text-align: center;
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 6px;
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
 .progress-text {
@@ -438,25 +473,31 @@ body {
         padding: 20px;
     }
 
+    .timeline-container {
+        padding: 20px 10px;
+    }
+
     .timeline-item {
         flex-direction: column !important;
+        justify-content: center !important;
         text-align: center;
     }
 
     .timeline-content {
-        margin: 10px 0;
-        max-width: 100%;
+        width: 100% !important;
+        transform: none !important;
+        margin: 15px 0 !important;
     }
 
     .timeline-line,
     .timeline-progress {
-        left: 20px;
-        transform: none;
+        left: 30px !important;
+        transform: none !important;
     }
 
     .timeline-dot {
-        position: absolute;
-        left: 11px;
+        left: 21px !important;
+        transform: none !important;
     }
 }
 
