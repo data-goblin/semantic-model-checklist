@@ -139,41 +139,24 @@
             const percentage = Math.round((completed / total) * 100);
 
             const progressBar = document.getElementById('timeline-progress');
-            const timelineContainer = document.querySelector('.timeline-container');
-            const timelineLineStart = document.querySelector('.timeline-line');
 
             if (completed === 0) {
                 progressBar.style.height = '0%';
             } else {
-                // Find the actual position of the lowest completed dot
-                let lowestCompletedDot = null;
+                // Find the lowest completed step index
                 let lowestCompletedIndex = -1;
 
                 dots.forEach((dot, index) => {
                     if (dot.classList.contains('completed')) {
-                        if (index > lowestCompletedIndex) {
-                            lowestCompletedIndex = index;
-                            lowestCompletedDot = dot;
-                        }
+                        lowestCompletedIndex = Math.max(lowestCompletedIndex, index);
                     }
                 });
 
-                if (lowestCompletedDot && timelineContainer && timelineLineStart) {
-                    // Get the position of the timeline line start and the dot
-                    const lineRect = timelineLineStart.getBoundingClientRect();
-                    const dotRect = lowestCompletedDot.getBoundingClientRect();
-
-                    // Calculate distance from line start to dot center
-                    const lineStartY = lineRect.top;
-                    const dotCenterY = dotRect.top + (dotRect.height / 2);
-                    const distanceFromStart = dotCenterY - lineStartY;
-
-                    // Get the total line height
-                    const totalLineHeight = lineRect.height;
-
-                    // Calculate percentage but cap it so it doesn't go past the dot
-                    const heightPercentage = Math.max(0, Math.min((distanceFromStart / totalLineHeight) * 100, 100));
-                    progressBar.style.height = `${heightPercentage}%`;
+                if (lowestCompletedIndex >= 0) {
+                    // Simple calculation: each step represents 1/total of the timeline
+                    // Go to the center of the step, so add 0.5
+                    const targetPercentage = ((lowestCompletedIndex + 0.5) / total) * 100;
+                    progressBar.style.height = `${Math.min(targetPercentage, 100)}%`;
                 }
             }
 
