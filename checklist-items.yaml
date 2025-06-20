@@ -1,0 +1,234 @@
+# Semantic Model Checklist
+# Maintained by Data Goblins (Kurt Buhler)
+# For use in Tabular Editor 3.
+# Last updated: 2025-06-20
+
+- title: "Semantic Model Design"
+  items:
+    - text: "Define user audience - who will use this semantic model, why & how?"
+      reference: "https://data-goblins.com/power-bi/report-requirements"
+    
+    - text: "Collect requirements - identify business questions & value addressed"
+      reference: "https://learn.microsoft.com/en-us/power-bi/guidance/powerbi-implementation-planning-bi-strategy-bi-solution-planning#step-1-gather-requirements"
+    
+    - text: "Identify main semantic model tables"
+      reference: "https://blog.tabulareditor.com/2024/01/16/prepare-your-data-for-a-semantic-model/"
+    
+    - text: "Determine table storage modes (favour import mode)"
+      reference: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-storage-mode"
+    
+    - text: "Mock up model diagram in visio, dbdiagram.io, PowerPoint, etc."
+      reference: "https://blog.tabulareditor.com/2023/12/07/gather-requirements-for-semantic-models/"
+    
+    - text: "Profile data for completeness, quality & shape before starting build"
+      reference: "https://blog.tabulareditor.com/2024/01/16/prepare-your-data-for-a-semantic-model/"
+    
+    - text: "Define model management tools (i.e. Power BI Desktop, Tabular Editor, semantic-link-labs)"
+      reference: ""
+    
+    - text: "For bigger models, plan work in weekly chunks (i.e. sprints)"
+      reference: ""
+    
+    - text: "Identify whether you need perspectives (personalize visuals)"
+      reference: "https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-personalize-visuals?tabs=powerbi-desktop#use-perspectives-for-a-more-focused-view"
+    
+    - text: "Identify whether you need semantic model translations"
+      reference: "https://www.kasperonbi.com/setting-up-translations-for-power-bi-premium/"
+
+- title: "Power Query - Data Sources & Refresh"
+  items:
+    - text: "If connecting to Excel files, convert to .csv instead of .xlsx if feasible"
+      reference: "https://blog.crossjoin.co.uk/2018/08/02/comparing-the-performance-of-csv-and-excel-data-sources-in-power-query/"
+    
+    - text: "Push transformations to the upstream data source where feasible"
+      reference: "https://ssbipolar.com/2021/05/31/roches-maxim/"
+    
+    - text: "Eliminate unnecessary fields & data"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#3"
+    
+    - text: "Apply a parameterized, early filter to limit data while building"
+      reference: "http://www.thebiccountant.com/2016/11/08/speed-powerbi-power-query-design-process/"
+    
+    - text: "Check datatypes & decimal precision"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#4"
+    
+    - text: "Parameterize repeated values in Power Query"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#5"
+    
+    - text: "Avoid merges & appends; save 'expensive' steps that read full data for later"
+      reference: "https://learn.microsoft.com/en-us/power-query/best-practices#do-expensive-operations-last"
+    
+    - text: "Disable load on intermediate data sources in Power Query"
+      reference: "https://docs.microsoft.com/en-us/power-bi/connect-data/refresh-include-in-report-refresh#managing-loading-of-queries"
+    
+    - text: "Check that queries are folding to the data source in Power Query"
+      reference: "https://docs.microsoft.com/en-us/power-query/power-query-folding"
+    
+    - text: "Follow Power Query best practices from Microsoft"
+      reference: "https://learn.microsoft.com/en-us/power-query/best-practices"
+    
+    - text: "Design & add error handling on 'sensitive' steps where the query could fail"
+      reference: "https://learn.microsoft.com/en-us/power-query/error-handling"
+    
+    - text: "Set privacy levels on data sources (i.e. to Organizational)"
+      reference: "https://docs.microsoft.com/en-us/power-bi/enterprise/desktop-privacy-levels"
+    
+    - text: "Check that the refresh time & CPU use are not too high"
+      reference: "https://blog.crossjoin.co.uk/2022/07/03/measuring-power-query-cpu-usage-during-power-bi-dataset-refresh/"
+    
+    - text: "Configure incremental refresh if you need to refresh only changing / recent data"
+      reference: "https://learn.microsoft.com/en-us/power-bi/connect-data/incremental-refresh"
+    
+    - text: "Try different approaches for multiple find & replace, i.e. add conditional column"
+      reference: ""
+
+- title: "Model Objects"
+  items:
+    - text: "Check referential integrity of relationships"
+      reference: "https://data-goblins.com/power-bi/analyze-power-bi-dataset"
+    
+    - text: "Ensure model object names are concise, consistent & logical"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#8"
+    
+    - text: "Disable summarization on data columns (disable implicit measures)"
+      reference: "https://eriksvensen.wordpress.com/2020/01/19/powerbi-a-quicker-way-to-set-summarize-to-none-for-all-your-fields-in-your-date-dimension-or-others/"
+    
+    - text: "Organize expressions & fields into (nested) display folders"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#9"
+    
+    - text: "Organize measures into measure tables or into fact tables"
+      reference: "https://exceleratorbi.com.au/measure-tables-in-power-bi/"
+    
+    - text: "Hide technical / non-reporting fields to not pollute field lists"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#10"
+    
+    - text: "Add descriptions to non-obvious fields in the model"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#12"
+    
+    - text: "Create organized model diagram layouts"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#13"
+
+- title: "DAX & Power Query (M) Code"
+  isSubsection: true
+  items:
+    - text: "Format DAX Code in model for readability"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#6"
+    
+    - text: "Benchmark DAX performance using DAX Studio 3"
+      reference: "https://www.youtube.com/watch?v=82i9J3YWyUQ"
+    
+    - text: "Use DAX variables to improve code readability"
+      reference: "https://learn.microsoft.com/en-us/dax/best-practices/dax-variables"
+    
+    - text: "Format M Code in Power Query for readability"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#6"
+    
+    - text: "Add helpful comments to complex code (DAX, M)"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#7"
+
+- title: "Semantic Model Handover"
+  items:
+    - text: "Identify who will support this semantic model & how"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#1"
+    
+    - text: "Set up version control / source control"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#2"
+    
+    - text: "Addressed BPA messages; documented ignored rules/objects"
+      reference: "https://github.com/TabularEditor/BestPracticeRules"
+    
+    - text: "Check if a field / data dictionary exists; if not, start one"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#11"
+    
+    - text: "Testing cases, queries, methods & results are documented"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#14"
+    
+    - text: "Training & Adoption material / methods have been made/shared"
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#15"
+
+- title: "Model Documentation"
+  items:
+    - text: "Basic Info.: Name, SPOC, Location, Workspaces..."
+      reference: ""
+    
+    - text: "Purpose: Business questions/problems the model addresses"
+      reference: ""
+    
+    - text: "User segments: Intended audience and tools used"
+      reference: ""
+    
+    - text: "Complexity: atypical properties/features"
+      reference: ""
+    
+    - text: "Data sources: Type, when updated..."
+      reference: ""
+    
+    - text: "Security: RLS/OLS, who has build permissions..."
+      reference: ""
+    
+    - text: "Field lists: Could be DAX fields, all fields, etc..."
+      reference: "https://data-goblins.com/power-bi/dataset-checklist#11"
+    
+    - text: "Manual interventions & justifications (if any)"
+      reference: ""
+
+- title: "Semantic Model Consumer Training"
+  items:
+    - text: "Where to get self-service Power BI training"
+      reference: "https://learn.microsoft.com/en-us/training/powerplatform/power-bi"
+    
+    - text: "How to find the semantic model (discoverability) and why to trust it (endorsement)"
+      reference: ""
+    
+    - text: "How to connect to the semantic model from Power BI or Excel"
+      reference: ""
+    
+    - text: "Where to find the most important measures"
+      reference: ""
+    
+    - text: "How to search the model"
+      reference: ""
+    
+    - text: "How to check when the data was last updated"
+      reference: ""
+    
+    - text: "The pandora's box that is composite modelling over AAS / Power BI Semantic models"
+      reference: ""
+
+- title: "Semantic Model Maker Training"
+  items:
+    - text: "Where to get self-service Power BI training"
+      reference: "https://learn.microsoft.com/en-us/training/powerplatform/power-bi"
+    
+    - text: "How to connect to their data sources"
+      reference: ""
+    
+    - text: "Power BI Desktop UI"
+      reference: ""
+    
+    - text: "Where to get help with Power Query"
+      reference: ""
+    
+    - text: "What are the Power Query best practices"
+      reference: "https://learn.microsoft.com/en-us/power-query/best-practices"
+    
+    - text: "How to create DAX Quick Measures in Power BI Desktop"
+      reference: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-quick-measures"
+    
+    - text: "Where to get help about DAX"
+      reference: "https://dax.guide/"
+    
+    - text: "Where to get DAX self-service training"
+      reference: "https://www.sqlbi.com/p/introducing-dax-video-course/"
+    
+    - text: "How to safely secure data with RLS"
+      reference: "https://learn.microsoft.com/en-us/power-bi/enterprise/service-admin-rls"
+    
+    - text: "How & why you separate datamodel & report development"
+      reference: "https://learn.microsoft.com/en-us/power-bi/guidance/report-separate-from-model"
+    
+    - text: "How to publish & where they should publish"
+      reference: "https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-upload-desktop-files"
+    
+    - text: "How to safely & sustainably share their semantic model with others"
+      reference: "https://learn.microsoft.com/en-us/power-bi/connect-data/service-datasets-share"
