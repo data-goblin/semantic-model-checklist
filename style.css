@@ -33,7 +33,7 @@ body {
 }
 
 .model-info {
-    background: var(--te3-light-3)33;
+    background: var(--te3-light-3)33 !important;
     padding: 15px;
     border-radius: 6px;
     margin: 20px 0;
@@ -286,7 +286,6 @@ body {
     color: var(--te3-dark);
 }
 
-/* Timeline Styles - Critical Section */
 .timeline-section {
     background: var(--te3-light-3)11;
     padding: 30px;
