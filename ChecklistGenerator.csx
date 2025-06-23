@@ -16,7 +16,7 @@ using TabularEditor.TOMWrapper;
 ScriptHelper.WaitFormVisible = false;
 
 // GitHub repository configuration
-public static class GitHubConfig
+class GitHubConfig
 {
     public const string BaseUrl = "https://raw.githubusercontent.com/data-goblin/semantic-model-checklist/main/";
     public const string ChecklistItemsUrl = BaseUrl + "checklist-items.yaml";
@@ -25,14 +25,14 @@ public static class GitHubConfig
     public const string IconsUrl = BaseUrl + "icons.json";
 }
 
-public class ChecklistSection
+class ChecklistSection
 {
     public string Title { get; set; }
     public List<ChecklistItem> Items { get; set; } = new List<ChecklistItem>();
     public bool IsSubsection { get; set; } = false;
 }
 
-public class ChecklistItem
+class ChecklistItem
 {
     public string Text { get; set; }
     public string Reference { get; set; }
@@ -40,7 +40,7 @@ public class ChecklistItem
     public string AutoCheckReason { get; set; }
 }
 
-public class ModelAnalysis
+class ModelAnalysis
 {
     public bool HasDescriptions { get; set; }
     public bool HasDisplayFolders { get; set; }
@@ -52,7 +52,7 @@ public class ModelAnalysis
     public int TechnicalColumnsCount { get; set; }
     public int MeasuresWithFoldersCount { get; set; }
     public int ColumnsWithDescriptionsCount { get; set; }
-    
+
     public bool HasVertiPaqStats { get; set; }
     public long TotalModelSizeBytes { get; set; }
     public string FormattedModelSize { get; set; }
@@ -61,7 +61,7 @@ public class ModelAnalysis
     public List<(string TableName, string ColumnName, long Size)> ColumnStats { get; set; }
 }
 
-public class GenerationOptions
+class GenerationOptions
 {
     public string OutputPath { get; set; }
     public bool IncludeReferences { get; set; } = true;
@@ -69,7 +69,7 @@ public class GenerationOptions
     public string ProjectName { get; set; } = "My Semantic Model";
     public string ModelTitle { get; set; } = "";
     public bool UseOfflineMode { get; set; } = false;
-    
+
     // New options for user selection
     public bool IncludeModelStats { get; set; } = true;
     public bool IncludeTimeline { get; set; } = true;
@@ -118,7 +118,7 @@ async Task Main()
         {
             analysis = new ModelAnalysis(); // Empty analysis
         }
-        
+
         // Step 2: Download from GitHub if needed
         List<ChecklistSection> checklistSections = new List<ChecklistSection>();
         if (options.IncludeChecklists)
@@ -157,10 +157,10 @@ async Task Main()
                     checklistSections = new List<ChecklistSection>();
                 }
             }
-            
+
             ApplyAutoAnalysis(checklistSections, analysis);
         }
-        
+
         await GenerateEnhancedHtmlChecklist(checklistSections, options, analysis);
     }
     catch (Exception ex)
@@ -181,103 +181,110 @@ GenerationOptions ShowOptionsDialog()
     var form = new Form
     {
         Text = "Semantic Model Checklist Options",
-        Size = new Size(500, 400),
+        Size = new Size(600, 500),
         StartPosition = FormStartPosition.CenterScreen,
         FormBorderStyle = FormBorderStyle.FixedDialog,
         MaximizeBox = false,
         MinimizeBox = false
     };
 
+    var panel = new Panel
+    {
+        Size = new Size(570, 450),
+        Location = new Point(10, 10),
+        AutoScroll = true
+    };
+
     var titleLabel = new Label
     {
         Text = "TABULAR EDITOR 3 SEMANTIC MODEL CHECKLIST",
-        Font = new Font("Segoe UI", 12, FontStyle.Bold),
-        Size = new Size(460, 25),
-        Location = new Point(20, 20),
+        Font = new Font("Arial", 10, FontStyle.Bold),
+        Size = new Size(550, 30),
+        Location = new Point(10, 10),
         TextAlign = ContentAlignment.MiddleCenter
     };
 
     var descLabel = new Label
     {
-        Text = "Select what you want to include in your checklist:",
-        Size = new Size(460, 20),
-        Location = new Point(20, 55)
+        Text = "Select what you want to include:",
+        Size = new Size(530, 25),
+        Location = new Point(10, 50)
     };
 
     var statsCheckBox = new CheckBox
     {
         Text = "Model summary statistics (tables, columns, measures, VertiPaq analysis)",
-        Size = new Size(450, 20),
-        Location = new Point(30, 85),
+        Size = new Size(530, 30),
+        Location = new Point(20, 80),
         Checked = true
     };
 
     var timelineCheckBox = new CheckBox
     {
         Text = "Steps to build a model (interactive timeline)",
-        Size = new Size(450, 20),
-        Location = new Point(30, 115),
+        Size = new Size(530, 30),
+        Location = new Point(20, 115),
         Checked = true
     };
 
     var checklistsCheckBox = new CheckBox
     {
         Text = "Checklists (Design, Build, Data Sources, Documentation, Training, etc.)",
-        Size = new Size(450, 20),
-        Location = new Point(30, 145),
+        Size = new Size(530, 30),
+        Location = new Point(20, 150),
         Checked = true
     };
 
     var noteLabel = new Label
     {
-        Text = "NOTE: At least one option must be selected to generate a useful checklist.",
-        Font = new Font("Segoe UI", 8, FontStyle.Italic),
+        Text = "NOTE: Select at least one option",
+        Font = new Font("Arial", 8, FontStyle.Italic),
         ForeColor = Color.Gray,
-        Size = new Size(460, 20),
-        Location = new Point(20, 180)
+        Size = new Size(530, 25),
+        Location = new Point(10, 190)
     };
 
     var projectLabel = new Label
     {
         Text = "Project Name:",
-        Size = new Size(100, 20),
-        Location = new Point(20, 220)
+        Size = new Size(100, 25),
+        Location = new Point(20, 250)
     };
 
     var projectTextBox = new TextBox
     {
         Text = "Power BI Project",
-        Size = new Size(200, 20),
-        Location = new Point(130, 218)
+        Size = new Size(200, 25),
+        Location = new Point(130, 250)
     };
 
     var modelLabel = new Label
     {
         Text = "Model Title:",
-        Size = new Size(100, 20),
-        Location = new Point(20, 250)
+        Size = new Size(100, 25),
+        Location = new Point(20, 285)
     };
 
     var modelTextBox = new TextBox
     {
         Text = Model?.Name ?? "Semantic Model",
-        Size = new Size(200, 20),
-        Location = new Point(130, 248)
+        Size = new Size(200, 25),
+        Location = new Point(130, 285)
     };
 
     var okButton = new Button
     {
-        Text = "Generate Checklist",
-        Size = new Size(120, 30),
-        Location = new Point(250, 290),
+        Text = "Generate",
+        Size = new Size(100, 35),
+        Location = new Point(20, 350),
         DialogResult = DialogResult.OK
     };
 
     var cancelButton = new Button
     {
         Text = "Cancel",
-        Size = new Size(80, 30),
-        Location = new Point(380, 290),
+        Size = new Size(80, 35),
+        Location = new Point(130, 350),
         DialogResult = DialogResult.Cancel
     };
 
@@ -286,34 +293,29 @@ GenerationOptions ShowOptionsDialog()
     {
         if (!statsCheckBox.Checked && !timelineCheckBox.Checked && !checklistsCheckBox.Checked)
         {
-            MessageBox.Show(
-                "SELECTION REQUIRED\n\n" +
-                "Please select at least one option to generate a useful checklist.",
-                "Semantic Model Checklist - Validation",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+            MessageBox.Show("Please select at least one option.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             form.DialogResult = DialogResult.None;
         }
     };
 
-    form.Controls.AddRange(new Control[] {
+    panel.Controls.AddRange(new Control[] {
         titleLabel, descLabel, statsCheckBox, timelineCheckBox, checklistsCheckBox,
         noteLabel, projectLabel, projectTextBox, modelLabel, modelTextBox, okButton, cancelButton
     });
 
+    form.Controls.Add(panel);
     form.AcceptButton = okButton;
     form.CancelButton = cancelButton;
 
     var result = form.ShowDialog();
-    
+
     if (result == DialogResult.OK)
     {
         return new GenerationOptions
         {
             ProjectName = projectTextBox.Text,
             ModelTitle = modelTextBox.Text,
-            OutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
+            OutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                                      (modelTextBox.Text ?? "SemanticModel").Replace(" ", "_") + "_Checklist"),
             IncludeReferences = true,
             IncludeInstructions = true,
@@ -323,7 +325,7 @@ GenerationOptions ShowOptionsDialog()
             IncludeChecklists = checklistsCheckBox.Checked
         };
     }
-    
+
     return null;
 }
 
@@ -341,7 +343,7 @@ async Task<List<ChecklistSection>> GetChecklistDataFromGitHub(ModelAnalysis anal
         );
         return new List<ChecklistSection>();
     }
-    
+
     try
     {
         using (var client = new HttpClient())
@@ -349,7 +351,7 @@ async Task<List<ChecklistSection>> GetChecklistDataFromGitHub(ModelAnalysis anal
             client.Timeout = TimeSpan.FromSeconds(30);
             var yamlString = await client.GetStringAsync(GitHubConfig.ChecklistItemsUrl);
             var sections = ParseYamlChecklist(yamlString);
-            
+
             ApplyAutoAnalysis(sections, analysis);
             return sections;
         }
@@ -372,23 +374,23 @@ List<ChecklistSection> ParseYamlChecklist(string yamlContent)
 {
     var sections = new List<ChecklistSection>();
     var lines = yamlContent.Split('\n').Select(l => l.TrimEnd('\r')).ToArray();
-    
+
     ChecklistSection currentSection = null;
     ChecklistItem currentItem = null;
-    
+
     for (int i = 0; i < lines.Length; i++)
     {
         var line = lines[i];
         var trimmed = line.Trim();
-        
+
         if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("#"))
             continue;
-            
+
         if (line.StartsWith("- title:"))
         {
             if (currentSection != null)
                 sections.Add(currentSection);
-                
+
             currentSection = new ChecklistSection
             {
                 Title = ExtractYamlValue(line, "title:")
@@ -417,10 +419,10 @@ List<ChecklistSection> ParseYamlChecklist(string yamlContent)
             currentItem.Reference = ExtractYamlValue(line, "reference:");
         }
     }
-    
+
     if (currentSection != null)
         sections.Add(currentSection);
-    
+
     return sections;
 }
 
@@ -428,16 +430,16 @@ string ExtractYamlValue(string line, string key)
 {
     var keyIndex = line.IndexOf(key);
     if (keyIndex == -1) return "";
-    
+
     var valueStart = keyIndex + key.Length;
     var value = line.Substring(valueStart).Trim();
-    
-    if ((value.StartsWith("\"") && value.EndsWith("\"")) || 
+
+    if ((value.StartsWith("\"") && value.EndsWith("\"")) ||
         (value.StartsWith("'") && value.EndsWith("'")))
     {
         value = value.Substring(1, value.Length - 2);
     }
-    
+
     return value;
 }
 
@@ -453,7 +455,7 @@ void ApplyAutoAnalysis(List<ChecklistSection> sections, ModelAnalysis analysis)
         foreach (var item in section.Items)
         {
             var itemText = item.Text.ToLower();
-            
+
             if (itemText.Contains("define main semantic model tables") && Model?.Tables?.Count > 0)
             {
                 item.IsChecked = true;
@@ -512,11 +514,11 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
 {
     string safeOutputPath = EnsureSafeOutputPath(options.OutputPath);
     string htmlPath = safeOutputPath + ".html";
-    
+
     try
     {
         string htmlTemplate, iconsJson, cssContent;
-        
+
         // Get checklist and styles from GitHub
         using (var client = new HttpClient())
         {
@@ -525,23 +527,23 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
             iconsJson = await client.GetStringAsync(GitHubConfig.IconsUrl);
             cssContent = await client.GetStringAsync(GitHubConfig.CssUrl);
         }
-        
+
         // Extract icons from JSON
         var te3Logo = ExtractIconFromJson(iconsJson, "te3_logo");
         var modelSizeIcon = ExtractIconFromJson(iconsJson, "model_size");
         var tablesIcon = ExtractIconFromJson(iconsJson, "tables");
         var columnsIcon = ExtractIconFromJson(iconsJson, "columns");
         var measuresIcon = ExtractIconFromJson(iconsJson, "measures");
-        
+
         // Replace template placeholders
         var html = htmlTemplate
             .Replace("{{PROJECT_NAME}}", options.ProjectName)
             .Replace("{{CSS_URL}}", "") // Remove external CSS link
             .Replace("{{TE3_LOGO}}", te3Logo)
             .Replace("{{GENERATION_DATE}}", DateTime.Now.ToString("MMMM dd, yyyy"));
-        
+
         html = html.Replace("</head>", $"<style>{cssContent}</style></head>");
-        
+
         if (!options.IncludeTimeline)
         {
             var timelineStart = html.IndexOf("<div class='timeline-section'>");
@@ -550,12 +552,12 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                 var searchPos = timelineStart;
                 var divCount = 0;
                 var timelineEnd = -1;
-                
+
                 while (searchPos < html.Length)
                 {
                     var nextOpenDiv = html.IndexOf("<div", searchPos);
                     var nextCloseDiv = html.IndexOf("</div>", searchPos);
-                    
+
                     if (nextOpenDiv >= 0 && (nextCloseDiv < 0 || nextOpenDiv < nextCloseDiv))
                     {
                         divCount++;
@@ -576,19 +578,19 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                         break;
                     }
                 }
-                
+
                 if (timelineEnd > timelineStart)
                 {
                     html = html.Remove(timelineStart, timelineEnd - timelineStart);
                 }
             }
         }
-        
+
         // Generate model info section
-        var modelInfoSection = options.IncludeModelStats ? 
+        var modelInfoSection = options.IncludeModelStats ?
             GenerateModelInfoSection(analysis, options, modelSizeIcon, tablesIcon, columnsIcon, measuresIcon) : "";
         html = html.Replace("{{MODEL_INFO_SECTION}}", modelInfoSection);
-        
+
         // Generate instructions section
         var instructionsSection = "";
         if (options.IncludeInstructions && (options.IncludeChecklists || options.IncludeTimeline))
@@ -597,7 +599,7 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
         <div class='instructions'>
             <h3>How to Use This Enhanced Checklist</h3>
             <ul>";
-            
+
             if (options.IncludeChecklists)
             {
                 instructionsSection += @"
@@ -606,20 +608,20 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                 <li><strong>Reference links:</strong> Click the colored '?' buttons for additional documentation</li>
                 <li><strong>Notes sections:</strong> Use the text areas at the end of each section for custom notes</li>";
             }
-            
+
             if (options.IncludeTimeline)
             {
                 instructionsSection += @"
                 <li><strong>Timeline:</strong> Track your progress through the semantic model development journey</li>";
             }
-            
+
             instructionsSection += @"
             </ul>
         </div>";
         }
-        
+
         html = html.Replace("{{INSTRUCTIONS_SECTION}}", instructionsSection);
-        
+
         // Handle timeline section
         if (!options.IncludeTimeline)
         {
@@ -634,7 +636,7 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                 }
             }
         }
-        
+
         // Generate checklist sections
         var checklistHtml = new StringBuilder();
         if (options.IncludeChecklists && sections.Any())
@@ -644,23 +646,23 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
             {
                 var backgroundColors = new[] { "#8fcea4", "#ecb171", "#7fd3ce" };
                 var bgColor = backgroundColors[sectionIndex % 3];
-                
+
                 checklistHtml.AppendLine($@"
                 <div class='section'>
                     <div class='section-header'>
                         <h2 class='section-title'>{section.Title}</h2>
                     </div>
                     <div class='section-content' style='background-color: {bgColor}33 !important; padding: 20px;'>");
-                
+
                 foreach (var item in section.Items)
                 {
                     var itemId = Guid.NewGuid().ToString("N")[..8];
                     string checkedAttr = item.IsChecked ? "checked" : "";
                     string autoCheckedClass = item.IsChecked ? "auto-checked" : "";
-                    
+
                     checklistHtml.AppendLine($@"
-                    <div class='checklist-item {autoCheckedClass}' id='item-container-{itemId}'>"); 
-                    
+                    <div class='checklist-item {autoCheckedClass}' id='item-container-{itemId}'>");
+
                     if (options.IncludeReferences && !string.IsNullOrEmpty(item.Reference))
                     {
                         checklistHtml.AppendLine($@"                        <a href='{item.Reference}' class='reference-link' target='_blank' title='View reference documentation'>?</a>");
@@ -669,11 +671,11 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                     {
                         checklistHtml.AppendLine($@"                        <span class='reference-placeholder'></span>");
                     }
-                    
+
                     checklistHtml.AppendLine($@"                        <input type='checkbox' class='checkbox' name='item_{itemId}' id='checkbox-{itemId}' {checkedAttr}>
                         <div class='item-text'>
                             {item.Text}");
-                    
+
                     if (item.IsChecked && !string.IsNullOrEmpty(item.AutoCheckReason))
                     {
                         checklistHtml.AppendLine($@"                            <div class='auto-check-reason'>
@@ -681,11 +683,11 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                                 <button class='undo-auto-check' onclick='undoAutoCheck(""{itemId}"")'>undo</button>
                             </div>");
                     }
-                    
+
                     checklistHtml.AppendLine($@"                        </div>
                     </div>");
                 }
-                
+
                 checklistHtml.AppendLine($@"
                     <div class='notes-section'>
                         <div class='notes-label'>Notes & Comments:</div>
@@ -693,19 +695,19 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                     </div>
                 </div>
                 </div>");
-                
+
                 sectionIndex++;
             }
         }
-        
+
         html = html.Replace("{{CHECKLIST_SECTIONS}}", checklistHtml.ToString());
-        
+
         // Add footer stats
         var autoCheckedCount = sections.SelectMany(s => s.Items).Count(i => i.IsChecked);
         var totalItems = sections.SelectMany(s => s.Items).Count();
         html = html.Replace("{{AUTO_CHECKED_COUNT}}", autoCheckedCount.ToString());
         html = html.Replace("{{TOTAL_ITEMS}}", totalItems.ToString());
-        
+
         // Add JavaScript - only if needed for checklists
         if (options.IncludeChecklists)
         {
@@ -722,11 +724,11 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
             }
         }
         ";
-            
+
             // Insert JavaScript
             if (html.Contains("document.addEventListener('DOMContentLoaded', updateTimelineProgress);"))
             {
-                html = html.Replace("document.addEventListener('DOMContentLoaded', updateTimelineProgress);", 
+                html = html.Replace("document.addEventListener('DOMContentLoaded', updateTimelineProgress);",
                                    "document.addEventListener('DOMContentLoaded', updateTimelineProgress);\n\n" + additionalJavaScript);
             }
             else
@@ -735,15 +737,15 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                 html = html.Replace("</body>", $"<script>{additionalJavaScript}</script></body>");
             }
         }
-        
+
         File.WriteAllText(htmlPath, html);
-        
+
         // Final success message
         var includedItems = new List<string>();
         if (options.IncludeModelStats) includedItems.Add("Model Statistics");
         if (options.IncludeTimeline) includedItems.Add("Development Timeline");
         if (options.IncludeChecklists) includedItems.Add($"Checklists ({sections.Count} sections)");
-        
+
         try
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
@@ -751,7 +753,7 @@ async Task GenerateEnhancedHtmlChecklist(List<ChecklistSection> sections, Genera
                 FileName = htmlPath,
                 UseShellExecute = true
             });
-            
+
             MessageBox.Show(
                 "CHECKLIST GENERATED SUCCESSFULLY\n\n" +
                 $"Model: {options.ModelTitle}\n" +
@@ -804,11 +806,11 @@ string ExtractIconFromJson(string iconsJson, string iconKey)
         var startPattern = $"\"{iconKey}\": \"";
         var startIndex = iconsJson.IndexOf(startPattern);
         if (startIndex == -1) return "";
-        
+
         startIndex += startPattern.Length;
         var endIndex = iconsJson.IndexOf("\"", startIndex);
         if (endIndex == -1) return "";
-        
+
         return iconsJson.Substring(startIndex, endIndex - startIndex);
     }
     catch
@@ -816,36 +818,6 @@ string ExtractIconFromJson(string iconsJson, string iconKey)
         return "";
     }
 }
-
-string GenerateMinimalHtmlTemplate()
-{
-    return @"<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <title>{{PROJECT_NAME}} - Semantic Model Report</title>
-</head>
-<body>
-    <div class='container'>
-        <div class='header'>
-            {{TE3_LOGO}}
-            <h1>{{PROJECT_NAME}}</h1>
-            <h2>SEMANTIC MODEL SUMMARY</h2>
-            <p><strong>Generated: {{GENERATION_DATE}}</strong></p>
-        </div>
-
-        {{MODEL_INFO_SECTION}}
-        {{INSTRUCTIONS_SECTION}}
-        {{CHECKLIST_SECTIONS}}
-
-        <div class='footer'>
-            <p>Generated by Tabular Editor 3 • <a href='https://github.com/data-goblin/semantic-model-checklist'>View on GitHub</a></p>
-        </div>
-    </div>
-</body>
-</html>";
-}
-
 
 string GenerateModelInfoSection(ModelAnalysis analysis, GenerationOptions options, string modelIcon, string tablesIcon, string columnsIcon, string measuresIcon)
 {
@@ -857,10 +829,10 @@ string GenerateModelInfoSection(ModelAnalysis analysis, GenerationOptions option
             <p>This checklist has been automatically analyzed based on your current semantic model structure and contains pre-checked items where applicable.</p>
         </div>";
     }
-    
+
     var modelStats = (dynamic)analysis.ModelStats;
     var html = new StringBuilder();
-    
+
     html.AppendLine($@"
     <div class='model-info'>
         <h3>Model: {options.ModelTitle}</h3>
@@ -883,16 +855,16 @@ string GenerateModelInfoSection(ModelAnalysis analysis, GenerationOptions option
                 <div><div class='stat-value'>{modelStats.TotalMeasures}</div><div class='stat-label'>Measures</div></div>
             </div>
         </div>");
-    
+
     if (analysis.TableStats?.Any() == true || analysis.ColumnStats?.Any() == true)
     {
         html.AppendLine("<div class='charts-grid'>");
-        
+
         if (analysis.TableStats?.Any() == true)
         {
             html.AppendLine("<div class='chart-container'><h4>Top 5 Tables by Size</h4>");
             var maxTableSize = analysis.TableStats.Max(t => t.Size);
-            
+
             foreach (var table in analysis.TableStats)
             {
                 var widthPercent = maxTableSize > 0 ? (double)table.Size / maxTableSize * 100 : 0;
@@ -906,12 +878,12 @@ string GenerateModelInfoSection(ModelAnalysis analysis, GenerationOptions option
             }
             html.AppendLine("</div>");
         }
-        
+
         if (analysis.ColumnStats?.Any() == true)
         {
             html.AppendLine("<div class='chart-container'><h4>Top 5 Columns by Size</h4>");
             var maxColumnSize = analysis.ColumnStats.Max(c => c.Size);
-            
+
             foreach (var column in analysis.ColumnStats)
             {
                 var widthPercent = maxColumnSize > 0 ? (double)column.Size / maxColumnSize * 100 : 0;
@@ -925,136 +897,78 @@ string GenerateModelInfoSection(ModelAnalysis analysis, GenerationOptions option
             }
             html.AppendLine("</div>");
         }
-        
+
         html.AppendLine("</div>");
     }
-    
+
     html.AppendLine(@"
         <p style='margin: 15px 0 0 0; font-size: 14px; color: #666;'>This checklist has been automatically analyzed based on your current semantic model structure and contains pre-checked items where applicable.</p>
     </div>");
-    
+
     return html.ToString();
 }
 
 ModelAnalysis AnalyzeCurrentModel()
 {
     var analysis = new ModelAnalysis();
-    
+
     if (Model?.Tables == null || !Model.Tables.Any())
     {
         return analysis;
     }
-    
+
     try
     {
-        var modelStats = new {
+        var modelStats = new
+        {
             TotalTables = Model?.Tables?.Count ?? 0,
             TotalColumns = Model?.AllColumns?.Count() ?? 0,
             TotalMeasures = Model?.AllMeasures?.Count() ?? 0
         };
-        
+
         var tableStats = new List<(string Name, long RowCount, long Size)>();
         var columnStats = new List<(string TableName, string ColumnName, long Size)>();
         long totalModelSize = 0;
-        
+
         try
         {
             CollectVertiPaqAnalyzerStats();
-            
-            // Get model size
-            try
+
+            foreach (var table in Model.Tables)
             {
-                
-                // Sum all table sizes
-                if (totalModelSize == 0)
+                try
                 {
-                    foreach (var table in Model.Tables)
-                    {
-                        try
-                        {
-                            long tableSize = table.GetTotalSize();
-                            totalModelSize += tableSize;
-                            
-                            long rowCount = 0;
-                            try
-                            {
-                                var result = EvaluateDax($"COUNTROWS({table.DaxObjectFullName})");
-                                if (result != null && long.TryParse(result.ToString(), out long rc))
-                                    rowCount = rc;
-                            }
-                            catch { /* Ignore DAX evaluation errors */ }
-                            
-                            tableStats.Add((table.Name, rowCount, tableSize));
-                            
-                            // Get column stats for this table
-                            foreach (var column in table.Columns.Where(c => c.Type != ColumnType.RowNumber))
-                            {
-                                try
-                                {
-                                    if (column is DataColumn dataColumn)
-                                    {
-                                        long columnSize = dataColumn.GetTotalSize();
-                                        columnStats.Add((table.Name, column.Name, columnSize));
-                                    }
-                                }
-                                catch { /* Ignore column size errors */ }
-                            }
-                        }
-                        catch { /* Ignore table processing errors */ }
-                    }
-                }
-                else
-                {
-                    foreach (var table in Model.Tables)
-                    {
-                        try
-                        {
-                            long tableSize = table.GetTotalSize();
-                            
-                            long rowCount = 0;
-                            try
-                            {
-                                var result = EvaluateDax($"COUNTROWS({table.DaxObjectFullName})");
-                                if (result != null && long.TryParse(result.ToString(), out long rc))
-                                    rowCount = rc;
-                            }
-                            catch { /* Ignore DAX evaluation errors */ }
-                            
-                            tableStats.Add((table.Name, rowCount, tableSize));
-                            
-                            // Get column stats for this table
-                            foreach (var column in table.Columns.Where(c => c.Type != ColumnType.RowNumber))
-                            {
-                                try
-                                {
-                                    if (column is DataColumn dataColumn)
-                                    {
-                                        long columnSize = dataColumn.GetTotalSize();
-                                        columnStats.Add((table.Name, column.Name, columnSize));
-                                    }
-                                }
-                                catch { /* Ignore column size errors */ }
-                            }
-                        }
-                        catch { /* Ignore table processing errors */ }
-                    }
-                }
-            }
-            catch
-            {
-                // If everything fails, at least try to get basic table stats
-                foreach (var table in Model.Tables)
-                {
+                    long tableSize = table.GetTotalSize();
+                    totalModelSize += tableSize;
+
+                    long rowCount = 0;
                     try
                     {
-                        long tableSize = table.GetTotalSize();
-                        totalModelSize += tableSize;
-                        tableStats.Add((table.Name, 0, tableSize));
+                        var result = EvaluateDax($"COUNTROWS({table.DaxObjectFullName})");
+                        if (result != null && long.TryParse(result.ToString(), out long rc))
+                            rowCount = rc;
                     }
-                    catch { /* Ignore table processing errors */ }
+                    catch { /* Ignore DAX evaluation errors */ }
+
+                    tableStats.Add((table.Name, rowCount, tableSize));
+
+                    // Get column stats for this table
+                    foreach (var column in table.Columns.Where(c => c.Type != ColumnType.RowNumber))
+                    {
+                        try
+                        {
+                            if (column is DataColumn dataColumn)
+                            {
+                                long columnSize = dataColumn.GetTotalSize();
+                                columnStats.Add((table.Name, column.Name, columnSize));
+                            }
+                        }
+                        catch { /* Ignore column size errors */ }
+                    }
                 }
+                catch { /* Ignore table processing errors */ }
             }
-            
+
             analysis.HasVertiPaqStats = totalModelSize > 0;
             analysis.TotalModelSizeBytes = totalModelSize;
             analysis.FormattedModelSize = FormatBytes(totalModelSize);
@@ -1075,38 +989,38 @@ ModelAnalysis AnalyzeCurrentModel()
     {
         analysis.HasVertiPaqStats = false;
     }
-    
+
     // Continue with other analysis that doesn't require VertiPaq
     var fieldsWithDescriptions = Model.AllColumns.Count(c => !string.IsNullOrEmpty(c.Description)) +
                                 Model.AllMeasures.Count(m => !string.IsNullOrEmpty(m.Description));
     analysis.HasDescriptions = fieldsWithDescriptions > 0;
     analysis.ColumnsWithDescriptionsCount = fieldsWithDescriptions;
-    
+
     var fieldsWithFolders = Model.AllColumns.Count(c => !string.IsNullOrEmpty(c.DisplayFolder)) +
                            Model.AllMeasures.Count(m => !string.IsNullOrEmpty(m.DisplayFolder));
     analysis.HasDisplayFolders = fieldsWithFolders > 0;
     analysis.MeasuresWithFoldersCount = Model.AllMeasures.Count(m => !string.IsNullOrEmpty(m.DisplayFolder));
-    
+
     analysis.HasMeasureTables = Model.Tables.Any(t => t.Measures.Count > 0 && t.Columns.Count <= 2);
     analysis.HasRelationships = Model.Relationships?.Any() == true;
-    
-    var technicalColumns = Model.AllColumns.Where(c => 
+
+    var technicalColumns = Model.AllColumns.Where(c =>
         c.Name.EndsWith("Key") || c.Name.EndsWith("ID") || c.Name.EndsWith("_ID") ||
         c.Name.StartsWith("Sys") || c.Name.Contains("Created") || c.Name.Contains("Modified") ||
         c.Name.Contains("Audit") || c.Name.Contains("Rowguid")).ToList();
-    
+
     analysis.TechnicalColumnsCount = technicalColumns.Count;
     analysis.HasHiddenTechnicalFields = technicalColumns.Any(c => c.IsHidden);
-    
-    var tablesWithTechnicalNames = Model.Tables.Count(t => 
-        t.Name.StartsWith("Dim") || t.Name.StartsWith("Fact") || 
-        t.Name.StartsWith("View") || t.Name.Contains("_") || 
+
+    var tablesWithTechnicalNames = Model.Tables.Count(t =>
+        t.Name.StartsWith("Dim") || t.Name.StartsWith("Fact") ||
+        t.Name.StartsWith("View") || t.Name.Contains("_") ||
         t.Name.ToLower().Contains("staging"));
     analysis.HasCleanNaming = tablesWithTechnicalNames == 0;
-    
+
     var nonTextColumns = Model.AllColumns.Count(c => c.DataType != DataType.String);
     analysis.HasDataTypes = nonTextColumns > Model.AllColumns.Count() * 0.3;
-    
+
     return analysis;
 }
 
@@ -1115,13 +1029,13 @@ string FormatBytes(long bytes)
     string[] suffixes = { "B", "KB", "MB", "GB", "TB" };
     int suffixIndex = 0;
     double size = bytes;
-    
+
     while (size >= 1024 && suffixIndex < suffixes.Length - 1)
     {
         size /= 1024;
         suffixIndex++;
     }
-    
+
     return $"{size:N2} {suffixes[suffixIndex]}";
 }
 
@@ -1133,17 +1047,17 @@ string EnsureSafeOutputPath(string requestedPath)
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), requestedPath);
         }
-        
+
         string directory = Path.GetDirectoryName(requestedPath);
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
-        
+
         string testFile = Path.Combine(directory, $"test_write_{Guid.NewGuid().ToString("N")[..8]}.tmp");
         File.WriteAllText(testFile, "test");
         File.Delete(testFile);
-        
+
         return requestedPath;
     }
     catch
@@ -1153,4 +1067,5 @@ string EnsureSafeOutputPath(string requestedPath)
     }
 }
 
-await Main();
+// Entry point for macro compatibility - non-blocking approach
+Task.Run(async () => await Main());
